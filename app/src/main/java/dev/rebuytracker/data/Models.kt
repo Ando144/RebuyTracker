@@ -14,13 +14,17 @@ enum class MovementType { ENTRY, REBUY }
 @Serializable
 data class Profile(val id: String, val name: String)
 
+/** Parte de una compra que pone otro jugador con sus propias fichas. */
+@Serializable
+data class SellerShare(val playerId: Int, val chips: Long, val cents: Long)
+
 @Serializable
 data class Player(val id: Int, val name: String, val profileId: String? = null)
 
 /**
  * Compra de fichas: una entrada o un rebuy. Las fichas salen primero de la banca; si no llega,
- * el resto lo cede [sellerId]. [cents] es lo que paga el jugador; de eso, [centsToSeller] se lo
- * debe al jugador que cedió fichas y el resto va al bote. Todo se compensa al final.
+ * el resto lo ceden uno o varios jugadores ([shares]). [cents] es lo que paga el jugador; de eso,
+ * [centsToSeller] se lo debe a quienes cedieron fichas y el resto va al bote. Todo se compensa al final.
  */
 @Serializable
 data class Movement(
@@ -33,8 +37,15 @@ data class Movement(
     val centsToSeller: Long = 0,
     val timestamp: Long = 0,
     val type: MovementType = MovementType.REBUY,
+    val sellers: List<SellerShare> = emptyList(),
 ) {
     val totalChips: Long get() = chipsFromBank + chipsFromSeller
+
+    /** Jugadores que han cedido fichas. Las versiones antiguas guardaban un único [sellerId]. */
+    val shares: List<SellerShare>
+        get() = sellers.ifEmpty {
+            sellerId?.let { listOf(SellerShare(it, chipsFromSeller, centsToSeller)) } ?: emptyList()
+        }
 }
 
 data class PurchaseSplit(
@@ -112,11 +123,12 @@ data class Game(
     fun investedCents(playerId: Int): Long = movements.filter { it.playerId == playerId }.sumOf { it.cents }
 
     /** Dinero que le deben al jugador por fichas que ha cedido. */
-    fun soldCents(playerId: Int): Long = movements.filter { it.sellerId == playerId }.sumOf { it.centsToSeller }
+    fun soldCents(playerId: Int): Long =
+        movements.sumOf { m -> m.shares.filter { it.playerId == playerId }.sumOf { it.cents } }
 
     /** Solo se puede quitar a alguien que no ha hecho rebuys ni ha cedido fichas a nadie. */
     fun canRemove(playerId: Int): Boolean = movements.none {
-        (it.playerId == playerId && it.type == MovementType.REBUY) || it.sellerId == playerId
+        (it.playerId == playerId && it.type == MovementType.REBUY) || it.shares.any { s -> s.playerId == playerId }
     }
 
     /** Reparte una compra de fichas: primero banca y, lo que falte, de otro jugador. */
@@ -136,25 +148,48 @@ data class Game(
 
     fun nextPlayerId(): Int = (players.maxOfOrNull { it.id } ?: 0) + 1
 
-    /** Añade una compra (entrada o rebuy) aplicando el reparto banca/jugador. Devuelve null si falta el vendedor. */
-    fun withPurchase(playerId: Int, cents: Long, sellerId: Int?, type: MovementType, now: Long): Game? {
+    /**
+     * Añade una compra (entrada o rebuy). Las fichas salen de la banca y, si no llega, de los jugadores
+     * de [sellers] (id → céntimos que pone cada uno, que deben sumar lo que falta). Devuelve null si no cuadra.
+     */
+    fun withPurchase(playerId: Int, cents: Long, sellers: Map<Int, Long>, type: MovementType, now: Long): Game? {
         val split = splitPurchase(cents)
-        if (split.chips <= 0 || (split.fromSeller > 0 && (sellerId == null || sellerId == playerId))) return null
+        if (split.chips <= 0) return null
+        val shares = if (split.fromSeller == 0L) emptyList() else {
+            if (sellers.isEmpty() || playerId in sellers) return null
+            if (sellers.keys.any { player(it) == null } || sellers.values.any { it <= 0 }) return null
+            if (sellers.values.sum() != split.centsToSeller) return null
+            val entries = sellers.entries.toList()
+            var chipsLeft = split.fromSeller
+            entries.mapIndexed { i, (id, c) ->
+                val chips = if (i == entries.lastIndex) chipsLeft else chipsForCents(c).coerceAtMost(chipsLeft)
+                chipsLeft -= chips
+                SellerShare(id, chips, c)
+            }.also { list -> if (list.any { it.chips <= 0 }) return null }
+        }
         val movement = Movement(
             id = nextMovementId(),
             playerId = playerId,
             cents = cents,
             chipsFromBank = split.fromBank,
-            sellerId = if (split.fromSeller > 0) sellerId else null,
             chipsFromSeller = split.fromSeller,
             centsToSeller = split.centsToSeller,
             timestamp = now,
             type = type,
+            sellers = shares,
         )
         return copy(movements = movements + movement)
     }
 
     companion object {
+        /** Reparte [total] céntimos a partes iguales entre [ids] (el resto, céntimo a céntimo, a los primeros). */
+        fun evenSplit(total: Long, ids: List<Int>): Map<Int, Long> {
+            if (ids.isEmpty()) return emptyMap()
+            val base = total / ids.size
+            val extra = total % ids.size
+            return ids.mapIndexed { i, id -> id to base + if (i < extra) 1 else 0 }.toMap()
+        }
+
         fun new(
             now: Long,
             buyInCents: Long,

@@ -23,7 +23,7 @@ RebuyTracker records every movement as it happens and does the whole settlement 
 
 - **Game setup** — buy-in price, chips per buy-in, total chips in the bank; pick players from your regulars or add new ones.
 - **Chip value always visible** — e.g. `1 chip = €0.01 · €1 = 100 chips`.
-- **Rebuys with automatic source split** — chips are taken from the bank first; if the bank can't cover the full amount, the app asks which player provides the rest (bank-only, player-only or mixed rebuys).
+- **Rebuys with automatic source split** — chips are taken from the bank first; if the bank can't cover the full amount, the rest comes from one or more players — split evenly by default (e.g. €5 + €5) or with custom amounts.
 - **Flexible table** — add late joiners (their chips can also come from another player when the bank is empty), rename players, or remove someone added by mistake.
 - **Live table summary** — money on the table, chips left in the bank and a full movement log with undo.
 - **Chip count with validation** — flags when the counted chips don't match the chips in play, with an option to apply a proportional correction.

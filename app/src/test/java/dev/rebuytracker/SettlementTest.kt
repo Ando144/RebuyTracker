@@ -22,8 +22,11 @@ class SettlementTest {
         now = 0, buyInCents = 1000, chipsPerBuyIn = 1000, bankTotalChips = bank, players = players,
     )
 
-    private fun Game.rebuy(playerId: Int, cents: Long, sellerId: Int? = null): Game =
-        withPurchase(playerId, cents, sellerId, MovementType.REBUY, now = 1)!!
+    private fun Game.rebuy(playerId: Int, cents: Long, sellerId: Int? = null): Game {
+        val missing = splitPurchase(cents).centsToSeller
+        val sellers = if (sellerId != null && missing > 0) mapOf(sellerId to missing) else emptyMap()
+        return withPurchase(playerId, cents, sellers, MovementType.REBUY, now = 1)!!
+    }
 
     private fun nets(g: Game) = Settlement.compute(g).players.associate { it.player.name to it.netCents }
 
@@ -45,8 +48,9 @@ class SettlementTest {
     @Test
     fun rebuyNeedsSellerWhenBankIsEmpty() {
         val g = base(bank = 4000)
-        assertNull(g.withPurchase(1, 1000, null, MovementType.REBUY, 1))
-        assertNull(g.withPurchase(1, 1000, 1, MovementType.REBUY, 1))
+        assertNull(g.withPurchase(1, 1000, emptyMap(), MovementType.REBUY, 1))
+        assertNull(g.withPurchase(1, 1000, mapOf(1 to 1000L), MovementType.REBUY, 1))
+        assertNull(g.withPurchase(1, 1000, mapOf(2 to 400L, 3 to 500L), MovementType.REBUY, 1))
     }
 
     @Test
@@ -63,7 +67,7 @@ class SettlementTest {
         var g = base(bank = 5000).rebuy(1, 1000)        // la banca se queda vacía
         val pablo = Player(g.nextPlayerId(), "Pablo")
         g = g.copy(players = g.players + pablo)
-            .withPurchase(pablo.id, g.buyInCents, sellerId = 4, type = MovementType.ENTRY, now = 2)!!
+            .withPurchase(pablo.id, g.buyInCents, mapOf(4 to 1000L), type = MovementType.ENTRY, now = 2)!!
         assertEquals(1000L, g.entryOf(pablo.id)!!.chipsFromSeller)
         assertEquals(5000L, g.chipsDistributed)          // las fichas de Pablo no salen de la banca
 
@@ -153,5 +157,29 @@ class SettlementTest {
         assertEquals(1, bea.rebuys)
         assertEquals(2000L, bea.investedCents)
         assertNull(data.games[1].tableCents)
+    }
+
+    /** Banca vacía: un rebuy de 10 € se reparte, 5 € de un jugador y 5 € de otro. */
+    @Test
+    fun rebuySplitBetweenTwoPlayers() {
+        var g = base(bank = 4000)
+        g = g.withPurchase(1, 1000, Game.evenSplit(1000, listOf(2, 3)), MovementType.REBUY, now = 1)!!
+        val rb = g.rebuys.single()
+        assertEquals(listOf(2 to 500L, 3 to 500L), rb.shares.map { it.playerId to it.chips })
+        assertEquals(500L, g.soldCents(2))
+        assertEquals(500L, g.soldCents(3))
+        assertFalse(g.canRemove(3))
+
+        g = g.copy(finalChips = mapOf(1 to 1000L, 2 to 500L, 3 to 1500L, 4 to 1000L))
+        assertEquals(mapOf("Ana" to -1000L, "Bea" to 0L, "Carlos" to 1000L, "Dani" to 0L), nets(g))
+    }
+
+    @Test
+    fun unevenSplitAndRoundingKeepAllChips() {
+        val g = base(bank = 4000).withPurchase(1, 1000, mapOf(2 to 334L, 3 to 333L, 4 to 333L), MovementType.REBUY, 1)!!
+        val rb = g.rebuys.single()
+        assertEquals(1000L, rb.shares.sumOf { it.chips })
+        assertEquals(1000L, rb.shares.sumOf { it.cents })
+        assertEquals(mapOf(1 to 334L, 2 to 333L, 3 to 333L), Game.evenSplit(1000, listOf(1, 2, 3)))
     }
 }

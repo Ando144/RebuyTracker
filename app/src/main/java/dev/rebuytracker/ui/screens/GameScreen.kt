@@ -50,6 +50,10 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -60,6 +64,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import dev.rebuytracker.data.Game
@@ -96,9 +101,9 @@ fun GameScreen(
     game: Game,
     profiles: List<Profile>,
     onBack: () -> Unit,
-    onRebuy: (playerId: Int, cents: Long, sellerId: Int?) -> Unit,
+    onRebuy: (playerId: Int, cents: Long, sellers: Map<Int, Long>) -> Unit,
     onRemoveRebuy: (Long) -> Unit,
-    onAddPlayer: (name: String, sellerId: Int?) -> Boolean,
+    onAddPlayer: (name: String, sellers: Map<Int, Long>) -> Boolean,
     onRenamePlayer: (playerId: Int, name: String) -> Boolean,
     onRemovePlayer: (playerId: Int) -> Unit,
     onFinish: () -> Unit,
@@ -199,7 +204,7 @@ fun GameScreen(
             game = game,
             player = player,
             onDismiss = { rebuyFor = null },
-            onConfirm = { cents, sellerId -> onRebuy(player.id, cents, sellerId) },
+            onConfirm = { cents, sellers -> onRebuy(player.id, cents, sellers) },
         )
     }
 
@@ -314,13 +319,12 @@ private fun PlayerRow(game: Game, player: Player, onRebuy: () -> Unit, onEdit: (
 @Composable
 private fun MovementRow(game: Game, movement: Movement, onRemove: () -> Unit) {
     val buyer = game.player(movement.playerId)?.name ?: "?"
-    val seller = game.player(movement.sellerId)?.name ?: "?"
     val kind = if (movement.type == MovementType.ENTRY) "entrada" else "rebuy"
-    val origin = when {
-        movement.chipsFromSeller == 0L -> "Banca · ${formatChips(movement.chipsFromBank)} fichas"
-        movement.chipsFromBank == 0L -> "$seller · ${formatChips(movement.chipsFromSeller)} fichas"
-        else -> "Banca ${formatChips(movement.chipsFromBank)} + $seller ${formatChips(movement.chipsFromSeller)} fichas"
+    val parts = buildList {
+        if (movement.chipsFromBank > 0) add("Banca ${formatChips(movement.chipsFromBank)}")
+        movement.shares.forEach { add("${game.player(it.playerId)?.name ?: "?"} ${formatChips(it.chips)}") }
     }
+    val origin = parts.joinToString(" + ") + " fichas"
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -343,15 +347,45 @@ private fun MovementRow(game: Game, movement: Movement, onRemove: () -> Unit) {
     }
 }
 
-/** Desglose de una compra de fichas y selección del jugador que cede fichas si la banca no llega. */
+/** Jugadores elegidos para poner las fichas que faltan y cuánto pone cada uno. */
+@Stable
+private class SellerSelection {
+    val selected = mutableStateListOf<Int>()
+    val amounts = mutableStateMapOf<Int, String>()
+    var edited by mutableStateOf(false)
+
+    fun toggle(id: Int) {
+        if (id in selected) selected.remove(id) else selected.add(id)
+        edited = false
+    }
+
+    /** Céntimos que pone cada uno: a partes iguales salvo que se hayan editado a mano. */
+    fun shares(total: Long): Map<Int, Long> =
+        if (!edited || selected.size == 1) Game.evenSplit(total, selected.toList())
+        else selected.associateWith { parseCents(amounts[it] ?: "") ?: 0L }
+
+    fun edit(id: Int, text: String, total: Long) {
+        if (!edited) {
+            Game.evenSplit(total, selected.toList()).forEach { (k, v) -> amounts[k] = centsToInput(v) }
+            edited = true
+        }
+        amounts[id] = sanitizeMoney(text)
+    }
+
+    fun isValid(total: Long): Boolean {
+        val s = shares(total)
+        return s.isNotEmpty() && s.values.all { it > 0 } && s.values.sum() == total
+    }
+}
+
+/** Desglose de una compra de fichas y selección de quién pone las fichas si la banca no llega. */
 @Composable
 private fun ColumnScope.PurchaseSource(
     game: Game,
     split: PurchaseSplit?,
     buyerName: String,
     buyerId: Int?,
-    sellerId: Int?,
-    onSellerChange: (Int) -> Unit,
+    sellers: SellerSelection,
 ) {
     if (split == null || split.chips <= 0) return
     val bank = game.bankRemaining.coerceAtLeast(0)
@@ -363,33 +397,78 @@ private fun ColumnScope.PurchaseSource(
         }
         if (split.fromSeller > 0) {
             KeyValueRow(
-                "De otro jugador",
+                "De otros jugadores",
                 "${formatChips(split.fromSeller)} · ${formatEuros(split.centsToSeller)}",
                 valueColor = MaterialTheme.colorScheme.secondary,
             )
         }
     }
-    if (split.fromSeller > 0) {
-        Spacer(Modifier.height(16.dp))
-        Text(
-            if (bank == 0L) "La banca está vacía. ¿Quién le pasa las fichas?"
-            else "La banca no llega. ¿Quién pone las fichas que faltan?",
-            style = MaterialTheme.typography.titleSmall,
-        )
+    if (split.fromSeller <= 0) return
+
+    val total = split.centsToSeller
+    // Si cambia el importe, se vuelve al reparto a partes iguales.
+    LaunchedEffect(total) { sellers.edited = false }
+    Spacer(Modifier.height(16.dp))
+    Text(
+        if (bank == 0L) "La banca está vacía. ¿Quién pone las fichas?"
+        else "La banca no llega. ¿Quién pone las fichas que faltan?",
+        style = MaterialTheme.typography.titleSmall,
+    )
+    Text(
+        "Puedes elegir a varios y repartirlo entre ellos.",
+        style = MaterialTheme.typography.bodySmall,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+    )
+    Spacer(Modifier.height(8.dp))
+    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        game.players.filter { it.id != buyerId }.forEach { other ->
+            FilterChip(
+                selected = other.id in sellers.selected,
+                onClick = { sellers.toggle(other.id) },
+                label = { Text(other.name) },
+            )
+        }
+    }
+
+    val shares = sellers.shares(total)
+    if (sellers.selected.size > 1) {
         Spacer(Modifier.height(8.dp))
-        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            game.players.filter { it.id != buyerId }.forEach { other ->
-                FilterChip(
-                    selected = sellerId == other.id,
-                    onClick = { onSellerChange(other.id) },
-                    label = { Text(other.name) },
+        Panel(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp)) {
+            sellers.selected.forEach { id ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp),
+                ) {
+                    Text(game.player(id)?.name ?: "?", style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
+                    OutlinedTextField(
+                        value = if (sellers.edited) sellers.amounts[id] ?: "" else centsToInput(shares[id] ?: 0L),
+                        onValueChange = { sellers.edit(id, it, total) },
+                        suffix = { Text("€") },
+                        singleLine = true,
+                        textStyle = MaterialTheme.typography.bodyLarge.tabular().copy(textAlign = TextAlign.End),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Done),
+                        modifier = Modifier.width(120.dp),
+                    )
+                }
+            }
+            val diff = total - shares.values.sum()
+            if (diff != 0L) {
+                Text(
+                    if (diff > 0) "Faltan ${formatEuros(diff)} por repartir" else "Sobran ${formatEuros(-diff)}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(vertical = 4.dp),
                 )
             }
         }
-        val sellerName = game.player(sellerId)?.name
-        if (sellerName != null) {
-            Hint("${buyerName.ifBlank { "El jugador" }} le debe ${formatEuros(split.centsToSeller)} a $sellerName. Se compensa en los bizums del final.")
-        }
+    }
+
+    if (sellers.isValid(total)) {
+        val who = buyerName.ifBlank { "El jugador" }
+        val debts = shares.entries.joinToString(" y ") { (id, c) -> "${formatEuros(c)} a ${game.player(id)?.name ?: "?"}" }
+        Hint("$who debe $debts. Se compensa en los bizums del final.")
     }
 }
 
@@ -418,18 +497,18 @@ private fun RebuySheet(
     game: Game,
     player: Player,
     onDismiss: () -> Unit,
-    onConfirm: (cents: Long, sellerId: Int?) -> Unit,
+    onConfirm: (cents: Long, sellers: Map<Int, Long>) -> Unit,
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
     val lastAmount = game.rebuys.lastOrNull()?.cents ?: game.buyInCents
     var amountText by remember { mutableStateOf(centsToInput(lastAmount)) }
-    var sellerId by remember { mutableStateOf<Int?>(null) }
+    val sellers = remember { SellerSelection() }
 
     val cents = parseCents(amountText)?.takeIf { it > 0 }
     val split = cents?.let { game.splitPurchase(it) }
     val needsSeller = split != null && split.fromSeller > 0
-    val canConfirm = split != null && split.chips > 0 && (!needsSeller || sellerId != null)
+    val canConfirm = split != null && split.chips > 0 && (!needsSeller || sellers.isValid(split.centsToSeller))
     val bank = game.bankRemaining.coerceAtLeast(0)
 
     PurchaseSheetFrame(sheetState, onDismiss) {
@@ -461,14 +540,14 @@ private fun RebuySheet(
             modifier = Modifier.fillMaxWidth(),
         )
 
-        PurchaseSource(game, split, player.name, player.id, sellerId, onSellerChange = { sellerId = it })
+        PurchaseSource(game, split, player.name, player.id, sellers)
 
         Spacer(Modifier.height(20.dp))
         PrimaryAction(
             text = cents?.let { "Confirmar rebuy · ${formatEuros(it)}" } ?: "Confirmar rebuy",
             enabled = canConfirm,
             onClick = {
-                onConfirm(cents!!, if (needsSeller) sellerId else null)
+                onConfirm(cents!!, if (needsSeller) sellers.shares(split!!.centsToSeller) else emptyMap())
                 scope.launch { sheetState.hide() }.invokeOnCompletion { onDismiss() }
             },
         )
@@ -480,12 +559,12 @@ private fun AddPlayerSheet(
     game: Game,
     profiles: List<Profile>,
     onDismiss: () -> Unit,
-    onAdd: (name: String, sellerId: Int?) -> Boolean,
+    onAdd: (name: String, sellers: Map<Int, Long>) -> Boolean,
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
     var name by remember { mutableStateOf("") }
-    var sellerId by remember { mutableStateOf<Int?>(null) }
+    val sellers = remember { SellerSelection() }
     var error by remember { mutableStateOf<String?>(null) }
 
     val split = game.splitPurchase(game.buyInCents)
@@ -527,17 +606,17 @@ private fun AddPlayerSheet(
             modifier = Modifier.fillMaxWidth(),
         )
 
-        PurchaseSource(game, split, name.trim(), buyerId = null, sellerId = sellerId, onSellerChange = { sellerId = it })
+        PurchaseSource(game, split, name.trim(), buyerId = null, sellers = sellers)
 
         Spacer(Modifier.height(20.dp))
         PrimaryAction(
             text = "Añadir y entregar fichas",
-            enabled = name.isNotBlank() && (!needsSeller || sellerId != null),
+            enabled = name.isNotBlank() && (!needsSeller || sellers.isValid(split.centsToSeller)),
             onClick = {
                 val n = name.trim()
                 if (game.players.any { it.name.equals(n, ignoreCase = true) }) {
                     error = "Ya hay un jugador con ese nombre"
-                } else if (onAdd(n, if (needsSeller) sellerId else null)) {
+                } else if (onAdd(n, if (needsSeller) sellers.shares(split.centsToSeller) else emptyMap())) {
                     scope.launch { sheetState.hide() }.invokeOnCompletion { onDismiss() }
                 } else {
                     error = "No se ha podido añadir"

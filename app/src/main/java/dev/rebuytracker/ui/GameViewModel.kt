@@ -162,14 +162,14 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
         _state.update { it.copy(current = game, screen = Screen.GAME) }
     }
 
-    /** Jugador que se incorpora tarde. Las fichas salen de la banca y, si no llega, de [sellerId]. */
-    fun addPlayer(name: String, sellerId: Int?): Boolean {
+    /** Jugador que se incorpora tarde. Las fichas salen de la banca y, si no llega, de [sellers]. */
+    fun addPlayer(name: String, sellers: Map<Int, Long>): Boolean {
         val game = _state.value.current ?: return false
         val clean = name.trim()
         if (clean.isEmpty() || game.players.any { it.name.equals(clean, ignoreCase = true) }) return false
         val player = Player(game.nextPlayerId(), clean, profileFor(clean).id)
         val updated = game.copy(players = game.players + player)
-            .withPurchase(player.id, game.buyInCents, sellerId, MovementType.ENTRY, now())
+            .withPurchase(player.id, game.buyInCents, sellers, MovementType.ENTRY, now())
             ?: return false
         updateCurrent { updated }
         return true
@@ -193,8 +193,8 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
         )
     }
 
-    fun rebuy(playerId: Int, cents: Long, sellerId: Int?) = updateCurrent { game ->
-        game.withPurchase(playerId, cents, sellerId, MovementType.REBUY, now())
+    fun rebuy(playerId: Int, cents: Long, sellers: Map<Int, Long>) = updateCurrent { game ->
+        game.withPurchase(playerId, cents, sellers, MovementType.REBUY, now())
     }
 
     fun removeRebuy(id: Long) = updateCurrent { g ->
