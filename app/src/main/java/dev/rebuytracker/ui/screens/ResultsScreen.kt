@@ -112,9 +112,21 @@ fun ResultsScreen(
             item {
                 Panel {
                     Row(Modifier.fillMaxWidth()) {
-                        Stat("En la mesa", formatEuros(game.tableValueCents), Modifier.weight(1.2f))
-                        Stat("Rebuys", game.rebuys.size.toString(), Modifier.weight(0.8f))
+                        if (game.isManual) {
+                            Stat("Jugadores", game.players.size.toString(), Modifier.weight(1f))
+                        } else {
+                            Stat("En la mesa", formatEuros(game.tableValueCents), Modifier.weight(1.2f))
+                            Stat("Rebuys", game.rebuys.size.toString(), Modifier.weight(0.8f))
+                        }
                         Stat("Bizums", result.transfers.size.toString(), Modifier.weight(0.8f))
+                    }
+                    if (game.isManual) {
+                        Text(
+                            "Partida registrada a mano: solo resultados.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(top = 8.dp),
+                        )
                     }
                 }
             }
@@ -140,7 +152,7 @@ fun ResultsScreen(
             item {
                 Panel(contentPadding = PaddingValues(vertical = 4.dp)) {
                     result.players.forEachIndexed { index, r ->
-                        RankRow(index + 1, r)
+                        RankRow(index + 1, r, showDetails = !game.isManual)
                         if (index < result.players.lastIndex) {
                             HorizontalDivider(Modifier.padding(start = 72.dp), color = MaterialTheme.colorScheme.outlineVariant)
                         }
@@ -174,7 +186,7 @@ fun ResultsScreen(
 }
 
 @Composable
-private fun RankRow(position: Int, r: PlayerResult) {
+private fun RankRow(position: Int, r: PlayerResult, showDetails: Boolean) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -190,7 +202,7 @@ private fun RankRow(position: Int, r: PlayerResult) {
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
-            Text(
+            if (showDetails) Text(
                 "Puso ${formatEuros(r.investedCents)} · ${formatChips(r.finalChips)} fichas (${formatEuros(r.finalValueCents)})",
                 style = MaterialTheme.typography.bodySmall.tabular(),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,

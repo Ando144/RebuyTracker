@@ -32,6 +32,7 @@ object Settlement {
      * Si el recuento no cuadra con las fichas repartidas, se reescala el valor de las fichas para que las cuentas sumen cero.
      */
     fun compute(game: Game): SettlementResult {
+        game.manualNets?.let { return computeManual(game, it) }
         val expected = game.chipsDistributed
         val counted = game.countedChips
         val factor = if (counted > 0 && counted != expected) expected.toDouble() / counted else 1.0
@@ -56,6 +57,14 @@ object Settlement {
 
         val transfers = minimizeTransfers(game.players.mapIndexed { i, p -> p to nets[i] })
         return SettlementResult(results, transfers, expected, counted)
+    }
+
+    private fun computeManual(game: Game, nets: Map<Int, Long>): SettlementResult {
+        val results = game.players.map { p ->
+            PlayerResult(p, investedCents = 0, soldCents = 0, finalChips = 0, finalValueCents = 0, netCents = nets[p.id] ?: 0L)
+        }.sortedByDescending { it.netCents }
+        val transfers = minimizeTransfers(game.players.map { it to (nets[it.id] ?: 0L) })
+        return SettlementResult(results, transfers, expectedChips = 0, countedChips = 0)
     }
 
     /** Redondea a céntimos garantizando que la suma sea exactamente [target]. */

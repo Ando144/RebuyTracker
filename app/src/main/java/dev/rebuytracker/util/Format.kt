@@ -12,6 +12,18 @@ private val ES: Locale = Locale.forLanguageTag("es-ES")
 fun formatEuros(cents: Long): String =
     NumberFormat.getCurrencyInstance(ES).format(BigDecimal.valueOf(cents, 2))
 
+/** Valor de una ficha con los decimales que hagan falta (0,01 €, 0,0025 €, 0,50 €…). */
+fun formatChipValue(centsPerChip: Double): String = NumberFormat.getCurrencyInstance(ES).apply {
+    minimumFractionDigits = 2
+    maximumFractionDigits = 4
+}.format(centsPerChip / 100.0)
+
+/** Fichas que se dan por 1 €, solo si es un número redondo. */
+fun chipsPerEuro(centsPerChip: Double): Long? {
+    val v = 100.0 / centsPerChip
+    return if (v >= 1 && kotlin.math.abs(v - Math.round(v)) < 1e-9) Math.round(v) else null
+}
+
 fun formatSignedEuros(cents: Long): String =
     if (cents > 0) "+" + formatEuros(cents) else formatEuros(cents)
 

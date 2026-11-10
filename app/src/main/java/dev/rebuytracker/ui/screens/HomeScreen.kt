@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import dev.rebuytracker.data.Game
 import dev.rebuytracker.data.Phase
+import dev.rebuytracker.logic.Leaderboard
 import dev.rebuytracker.logic.Settlement
 import dev.rebuytracker.ui.UiState
 import dev.rebuytracker.ui.components.BottomActionBar
@@ -51,6 +52,8 @@ fun HomeScreen(
     onDiscardCurrent: () -> Unit,
     onOpenHistory: (Game) -> Unit,
     onDeleteHistory: (Game) -> Unit,
+    onLeaderboard: () -> Unit,
+    onRoster: () -> Unit,
 ) {
     var confirmNew by remember { mutableStateOf(false) }
     var confirmDiscard by remember { mutableStateOf(false) }
@@ -87,6 +90,34 @@ fun HomeScreen(
             state.current?.let { game ->
                 item { SectionLabel("Partida en curso") }
                 item { CurrentGameCard(game, onContinue = onContinue, onDiscard = { confirmDiscard = true }) }
+            }
+
+            item { SectionLabel("General") }
+            item {
+                val leader = remember(state.history, state.profiles) {
+                    Leaderboard.compute(state.history, state.profiles).firstOrNull()
+                }
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Panel(modifier = Modifier.weight(1f), onClick = onLeaderboard) {
+                        Text("Clasificación", style = MaterialTheme.typography.titleSmall)
+                        Spacer(Modifier.height(2.dp))
+                        Text(
+                            leader?.let { "1º ${it.name} ${formatSignedEuros(it.netCents)}" } ?: "Sin partidas aún",
+                            style = MaterialTheme.typography.bodySmall.tabular(),
+                            color = leader?.let { moneyColor(it.netCents) } ?: MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 1,
+                        )
+                    }
+                    Panel(modifier = Modifier.weight(1f), onClick = onRoster) {
+                        Text("Jugadores", style = MaterialTheme.typography.titleSmall)
+                        Spacer(Modifier.height(2.dp))
+                        Text(
+                            "${state.profiles.size} habituales",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                }
             }
 
             item { SectionLabel("Historial") }
@@ -171,7 +202,7 @@ private fun HistoryCard(game: Game, onClick: () -> Unit, onDelete: () -> Unit) {
             Column(Modifier.weight(1f)) {
                 Text(formatDate(game.createdAt), style = MaterialTheme.typography.titleSmall)
                 Text(
-                    "${game.players.size} jugadores · ${formatEuros(game.tableValueCents)} en la mesa",
+                    if (game.isManual) "${game.players.size} jugadores · registrada a mano" else "${game.players.size} jugadores · ${formatEuros(game.tableValueCents)} en la mesa",
                     style = MaterialTheme.typography.bodySmall.tabular(),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )

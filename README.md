@@ -21,14 +21,15 @@ RebuyTracker records every movement as it happens and does the whole settlement 
 
 ## Features
 
-- **Game setup** — buy-in price, chips per buy-in, total chips in the bank, players.
+- **Game setup** — buy-in price, chips per buy-in, total chips in the bank; pick players from your regulars or add new ones.
+- **Chip value always visible** — e.g. `1 chip = €0.01 · €1 = 100 chips`.
 - **Rebuys with automatic source split** — chips are taken from the bank first; if the bank can't cover the full amount, the app asks which player provides the rest (bank-only, player-only or mixed rebuys).
-- **Live table summary** — money on the table, chips left in the bank, rebuy count and a full movement log with undo.
-- **Late joiners** — add players mid-game.
+- **Flexible table** — add late joiners (their chips can also come from another player when the bank is empty), rename players, or remove someone added by mistake.
+- **Live table summary** — money on the table, chips left in the bank and a full movement log with undo.
 - **Chip count with validation** — flags when the counted chips don't match the chips in play, with an option to apply a proportional correction.
-- **Results** — net win/loss per player and the minimal list of transfers (`Ana → Luis · €12.50`).
-- **Share** — send the summary straight to your group chat.
-- **Persistence & history** — the game in progress survives app restarts; closed games are kept in a history.
+- **Results** — net win/loss per player and the minimal list of transfers (`Ana → Luis · €12.50`), shareable to your group chat.
+- **Regular players & global leaderboard** — all-time net, games played, winning nights, average and best night per player. Past games played without the app can be added by result only.
+- **Persistence & history** — the game in progress survives app restarts; closed games are kept in a history. Old saved games are migrated automatically.
 
 ## How the settlement works
 
@@ -62,14 +63,18 @@ The logic lives in [`Settlement.kt`](app/src/main/java/dev/rebuytracker/logic/Se
 ```
 app/src/main/java/dev/rebuytracker/
 ├── data/          # Game model, rebuy split rules, local persistence
-├── logic/         # Settlement: net balances and transfer minimisation
+├── logic/         # Settlement (net balances, transfer minimisation) and leaderboard
 ├── ui/
-│   ├── screens/   # Home, Setup, Game, Count, Results
+│   ├── screens/   # Home, Setup, Game, Count, Results, Leaderboard, Roster, Manual game
 │   ├── components/# Shared Compose components
 │   ├── theme/     # Colours and typography
 │   └── GameViewModel.kt
 └── util/          # Currency / chip formatting and parsing
 ```
+
+## Signing
+
+Debug builds are signed with a fixed key committed in `keystore/debug.keystore` (standard Android debug credentials, not a secret). This way APKs from Android Studio and from GitHub Actions can be installed on top of each other without losing data.
 
 ## Getting started
 
@@ -90,8 +95,8 @@ Open the folder in Android Studio, let Gradle sync, and run the `app` configurat
 ## Roadmap
 
 - [ ] Screenshots and a short demo GIF
+- [ ] Public web leaderboard synced from the app
 - [ ] Light theme
-- [ ] Per-player stats across the game history
 - [ ] Export history to CSV
 - [ ] Support for cash buy-ins paid upfront to a banker
 

@@ -1,8 +1,10 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 
 package dev.rebuytracker.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -47,6 +49,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import dev.rebuytracker.data.Profile
 import dev.rebuytracker.ui.components.BottomActionBar
 import dev.rebuytracker.ui.components.Hint
 import dev.rebuytracker.ui.components.Panel
@@ -55,6 +58,7 @@ import dev.rebuytracker.ui.components.PrimaryAction
 import dev.rebuytracker.ui.components.SectionLabel
 import dev.rebuytracker.ui.components.appBarColors
 import dev.rebuytracker.util.centsToInput
+import dev.rebuytracker.util.formatChipValue
 import dev.rebuytracker.util.formatChips
 import dev.rebuytracker.util.formatEuros
 import dev.rebuytracker.util.parseCents
@@ -69,6 +73,7 @@ private val NamesSaver = listSaver<SnapshotStateList<String>, String>(
 
 @Composable
 fun SetupScreen(
+    profiles: List<Profile>,
     onBack: () -> Unit,
     onStart: (buyInCents: Long, chipsPerBuyIn: Long, bankTotalChips: Long, names: List<String>) -> Unit,
 ) {
@@ -193,7 +198,7 @@ fun SetupScreen(
                             " · quedan ${formatChips(bank - needed)} en la banca"
                         } else ""
                         Text(
-                            "${formatEuros(buyIn)} = ${formatChips(chips)} fichas$bankLine",
+                            "${formatEuros(buyIn)} = ${formatChips(chips)} fichas · 1 ficha = ${formatChipValue(buyIn.toDouble() / chips)}$bankLine",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
@@ -224,8 +229,30 @@ fun SetupScreen(
                         }
                     }
                     nameError?.let { Hint(it, color = MaterialTheme.colorScheme.error) }
+                    if (profiles.isNotEmpty()) {
+                        Spacer(Modifier.height(12.dp))
+                        Text(
+                            "Habituales (toca para añadir o quitar)",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                        Spacer(Modifier.height(4.dp))
+                        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            profiles.sortedBy { it.name.lowercase() }.forEach { profile ->
+                                val selected = players.any { it.equals(profile.name, ignoreCase = true) }
+                                FilterChip(
+                                    selected = selected,
+                                    onClick = {
+                                        if (selected) players.removeAll { it.equals(profile.name, ignoreCase = true) }
+                                        else players.add(profile.name)
+                                    },
+                                    label = { Text(profile.name) },
+                                )
+                            }
+                        }
+                    }
                     if (players.isEmpty()) {
-                        Hint("Escribe un nombre y pulsa + (o Intro en el teclado).")
+                        Hint("Elige habituales o escribe un nombre nuevo y pulsa + (se guardará como habitual).")
                     }
                     players.forEachIndexed { index, name ->
                         if (index == 0) Spacer(Modifier.height(8.dp))
