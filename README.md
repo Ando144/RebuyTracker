@@ -76,7 +76,7 @@ app/src/main/java/dev/rebuytracker/
 Requirements: Android Studio (Ladybug or newer), JDK 17, a device or emulator running Android 8.0+.
 
 ```bash
-git clone https://github.com/<your-username>/RebuyTracker.git
+git clone https://github.com/Ando144/RebuyTracker.git
 ```
 
 Open the folder in Android Studio, let Gradle sync, and run the `app` configuration.
