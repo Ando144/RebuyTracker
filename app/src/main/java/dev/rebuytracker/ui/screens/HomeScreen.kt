@@ -32,6 +32,7 @@ import dev.rebuytracker.data.Game
 import dev.rebuytracker.data.Phase
 import dev.rebuytracker.logic.Leaderboard
 import dev.rebuytracker.logic.Settlement
+import dev.rebuytracker.ui.PublishStatus
 import dev.rebuytracker.ui.UiState
 import dev.rebuytracker.ui.components.BottomActionBar
 import dev.rebuytracker.ui.components.Hint
@@ -54,6 +55,7 @@ fun HomeScreen(
     onDeleteHistory: (Game) -> Unit,
     onLeaderboard: () -> Unit,
     onRoster: () -> Unit,
+    onPublish: () -> Unit,
 ) {
     var confirmNew by remember { mutableStateOf(false) }
     var confirmDiscard by remember { mutableStateOf(false) }
@@ -117,6 +119,27 @@ fun HomeScreen(
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
+                }
+            }
+
+            item {
+                val cfg = state.publishConfig
+                val status = state.publishStatus
+                Panel(modifier = Modifier.padding(top = 8.dp), onClick = onPublish) {
+                    Text("Web pública", style = MaterialTheme.typography.titleSmall)
+                    Spacer(Modifier.height(2.dp))
+                    Text(
+                        when {
+                            !cfg.isComplete -> "Sin configurar · publica la clasificación en GitHub Pages"
+                            status == PublishStatus.Running -> "Publicando…"
+                            status is PublishStatus.Failed -> "Error al publicar · toca para ver"
+                            cfg.lastPublishedAt != null -> "Publicada · ${formatDate(cfg.lastPublishedAt)}"
+                            else -> "Configurada · pendiente de publicar"
+                        },
+                        style = MaterialTheme.typography.bodySmall,
+                        color = if (status is PublishStatus.Failed) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                    )
                 }
             }
 

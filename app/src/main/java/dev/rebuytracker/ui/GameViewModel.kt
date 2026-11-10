@@ -2,19 +2,33 @@ package dev.rebuytracker.ui
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 import dev.rebuytracker.data.Game
 import dev.rebuytracker.data.GameRepository
+import dev.rebuytracker.data.GitHubPublisher
 import dev.rebuytracker.data.MovementType
 import dev.rebuytracker.data.Phase
 import dev.rebuytracker.data.Player
 import dev.rebuytracker.data.Profile
+import dev.rebuytracker.data.PublishConfig
+import dev.rebuytracker.logic.PublicExport
+import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import java.util.UUID
 
-enum class Screen { HOME, SETUP, GAME, COUNT, RESULTS, LEADERBOARD, ROSTER, MANUAL }
+enum class Screen { HOME, SETUP, GAME, COUNT, RESULTS, LEADERBOARD, ROSTER, MANUAL, PUBLISH }
+
+sealed interface PublishStatus {
+    data object Idle : PublishStatus
+    data object Running : PublishStatus
+    data class Done(val at: Long) : PublishStatus
+    data class Failed(val message: String) : PublishStatus
+}
 
 data class UiState(
     val screen: Screen = Screen.HOME,
@@ -23,11 +37,16 @@ data class UiState(
     val profiles: List<Profile> = emptyList(),
     /** Partida del historial que se está consultando (solo lectura). */
     val viewing: Game? = null,
+    val publishConfig: PublishConfig = PublishConfig(),
+    val publishStatus: PublishStatus = PublishStatus.Idle,
 )
 
 class GameViewModel(app: Application) : AndroidViewModel(app) {
 
     private val repo = GameRepository(app)
+    private val publisher = GitHubPublisher()
+    private val json = Json { encodeDefaults = true }
+    private var publishPending = false
     private val _state = MutableStateFlow(UiState())
     val state: StateFlow<UiState> = _state.asStateFlow()
 
@@ -47,6 +66,7 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
             current = current,
             history = history,
             profiles = profiles,
+            publishConfig = repo.loadPublishConfig(),
         )
     }
 
@@ -93,6 +113,7 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
         val updated = profiles.map { if (it.id == id) it.copy(name = clean) else it }
         repo.saveProfiles(updated)
         _state.update { it.copy(profiles = updated) }
+        if (_state.value.history.isNotEmpty()) autoPublish()
         return true
     }
 
@@ -114,6 +135,8 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
 
     fun openManual() = _state.update { it.copy(screen = Screen.MANUAL, viewing = null) }
 
+    fun openPublish() = _state.update { it.copy(screen = Screen.PUBLISH, viewing = null) }
+
     fun continueGame() {
         val game = _state.value.current ?: return
         _state.update { it.copy(screen = screenFor(game.phase), viewing = null) }
@@ -123,7 +146,7 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
         val s = _state.value
         when (s.screen) {
             Screen.HOME -> Unit
-            Screen.SETUP, Screen.GAME, Screen.LEADERBOARD, Screen.ROSTER -> goHome()
+            Screen.SETUP, Screen.GAME, Screen.LEADERBOARD, Screen.ROSTER, Screen.PUBLISH -> goHome()
             Screen.MANUAL -> openLeaderboard()
             Screen.COUNT -> backToGame()
             Screen.RESULTS -> if (s.viewing != null) goHome() else backToCount()
@@ -196,6 +219,7 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
         val history = (listOf(linked) + _state.value.history).sortedByDescending { it.createdAt }
         repo.saveHistory(history)
         _state.update { it.copy(history = history) }
+        autoPublish()
     }
 
     fun closeGame() {
@@ -226,5 +250,47 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
         val history = _state.value.history.filterNot { it.id == game.id }
         repo.saveHistory(history)
         _state.update { it.copy(history = history) }
+        autoPublish()
+    }
+
+    // --- Web pública ---
+
+    fun savePublishConfig(config: PublishConfig) {
+        val clean = config.copy(owner = config.owner.trim(), repo = config.repo.trim(), token = config.token.trim())
+        repo.savePublishConfig(clean)
+        _state.update { it.copy(publishConfig = clean) }
+    }
+
+    private fun autoPublish() {
+        val config = _state.value.publishConfig
+        if (config.auto && config.isComplete) publishNow()
+    }
+
+    fun publishNow() {
+        val s = _state.value
+        val config = s.publishConfig
+        if (!config.isComplete) return
+        if (s.publishStatus == PublishStatus.Running) {
+            publishPending = true
+            return
+        }
+        _state.update { it.copy(publishStatus = PublishStatus.Running) }
+        viewModelScope.launch {
+            val now = now()
+            val data = PublicExport.build(s.history, s.profiles, now)
+            val result = runCatching { publisher.publish(config, json.encodeToString(data)) }
+            result.onSuccess {
+                val updated = _state.value.publishConfig.copy(lastPublishedAt = now)
+                repo.savePublishConfig(updated)
+                _state.update { it.copy(publishConfig = updated, publishStatus = PublishStatus.Done(now)) }
+            }.onFailure { e ->
+                _state.update { it.copy(publishStatus = PublishStatus.Failed(e.message ?: "Error desconocido al publicar")) }
+            }
+            // Si hubo cambios mientras se publicaba, se vuelve a publicar con los datos nuevos.
+            if (publishPending) {
+                publishPending = false
+                publishNow()
+            }
+        }
     }
 }

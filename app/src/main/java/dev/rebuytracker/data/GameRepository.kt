@@ -5,7 +5,7 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-/** Guarda en local la partida en curso, el historial y los jugadores habituales. */
+/** Guarda en local la partida en curso, el historial, los jugadores habituales y la configuración de la web. */
 class GameRepository(context: Context) {
     private val prefs = context.applicationContext.getSharedPreferences("rebuy_tracker", Context.MODE_PRIVATE)
     private val json = Json { ignoreUnknownKeys = true }
@@ -40,9 +40,19 @@ class GameRepository(context: Context) {
         prefs.edit().putString(KEY_PROFILES, json.encodeToString(profiles)).apply()
     }
 
+    fun loadPublishConfig(): PublishConfig =
+        prefs.getString(KEY_PUBLISH, null)
+            ?.let { runCatching { json.decodeFromString<PublishConfig>(it) }.getOrNull() }
+            ?: PublishConfig()
+
+    fun savePublishConfig(config: PublishConfig) {
+        prefs.edit().putString(KEY_PUBLISH, json.encodeToString(config)).apply()
+    }
+
     private companion object {
         const val KEY_CURRENT = "current_game"
         const val KEY_HISTORY = "history"
         const val KEY_PROFILES = "profiles"
+        const val KEY_PUBLISH = "publish_config"
     }
 }

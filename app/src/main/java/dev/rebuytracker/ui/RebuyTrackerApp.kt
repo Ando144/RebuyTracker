@@ -13,6 +13,7 @@ import dev.rebuytracker.ui.screens.GameScreen
 import dev.rebuytracker.ui.screens.HomeScreen
 import dev.rebuytracker.ui.screens.LeaderboardScreen
 import dev.rebuytracker.ui.screens.ManualGameScreen
+import dev.rebuytracker.ui.screens.PublishScreen
 import dev.rebuytracker.ui.screens.ResultsScreen
 import dev.rebuytracker.ui.screens.RosterScreen
 import dev.rebuytracker.ui.screens.SetupScreen
@@ -34,6 +35,7 @@ fun RebuyTrackerApp(vm: GameViewModel = viewModel()) {
                 onDeleteHistory = vm::deleteHistory,
                 onLeaderboard = vm::openLeaderboard,
                 onRoster = vm::openRoster,
+                onPublish = vm::openPublish,
             )
 
             Screen.SETUP -> SetupScreen(profiles = state.profiles, onBack = vm::goHome, onStart = vm::startGame)
@@ -92,6 +94,15 @@ fun RebuyTrackerApp(vm: GameViewModel = viewModel()) {
                     onDelete = vm::deleteProfile,
                 )
             }
+
+            Screen.PUBLISH -> PublishScreen(
+                config = state.publishConfig,
+                status = state.publishStatus,
+                gamesCount = state.history.size,
+                onBack = vm::goHome,
+                onSave = vm::savePublishConfig,
+                onPublish = vm::publishNow,
+            )
 
             Screen.MANUAL -> ManualGameScreen(
                 profiles = state.profiles,

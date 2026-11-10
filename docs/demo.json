@@ -1,0 +1,1506 @@
+{
+ "version": 1,
+ "generatedAt": 1775248200000,
+ "players": [
+  {
+   "id": "demo-0",
+   "name": "Adrián"
+  },
+  {
+   "id": "demo-1",
+   "name": "Pablo"
+  },
+  {
+   "id": "demo-2",
+   "name": "Lucía"
+  },
+  {
+   "id": "demo-3",
+   "name": "Iker"
+  },
+  {
+   "id": "demo-4",
+   "name": "Marta"
+  },
+  {
+   "id": "demo-5",
+   "name": "Unai"
+  },
+  {
+   "id": "demo-6",
+   "name": "Nerea"
+  }
+ ],
+ "games": [
+  {
+   "id": 1757273400000,
+   "date": 1757273400000,
+   "manual": false,
+   "buyInCents": 1000,
+   "chipsPerBuyIn": 1000,
+   "tableCents": 13000,
+   "results": [
+    {
+     "playerId": "demo-0",
+     "rebuys": 1,
+     "rebuyCents": 1000,
+     "investedCents": 2000,
+     "soldCents": 0,
+     "finalChips": 7570,
+     "netCents": 5570
+    },
+    {
+     "playerId": "demo-4",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 3040,
+     "netCents": 2040
+    },
+    {
+     "playerId": "demo-3",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 150,
+     "netCents": -850
+    },
+    {
+     "playerId": "demo-5",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 150,
+     "netCents": -850
+    },
+    {
+     "playerId": "demo-6",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 10,
+     "netCents": -990
+    },
+    {
+     "playerId": "demo-2",
+     "rebuys": 3,
+     "rebuyCents": 3000,
+     "investedCents": 4000,
+     "soldCents": 0,
+     "finalChips": 2070,
+     "netCents": -1930
+    },
+    {
+     "playerId": "demo-1",
+     "rebuys": 2,
+     "rebuyCents": 2000,
+     "investedCents": 3000,
+     "soldCents": 0,
+     "finalChips": 10,
+     "netCents": -2990
+    }
+   ],
+   "transfers": [
+    {
+     "from": "demo-1",
+     "to": "demo-0",
+     "cents": 2990
+    },
+    {
+     "from": "demo-2",
+     "to": "demo-0",
+     "cents": 1930
+    },
+    {
+     "from": "demo-6",
+     "to": "demo-4",
+     "cents": 990
+    },
+    {
+     "from": "demo-3",
+     "to": "demo-4",
+     "cents": 850
+    },
+    {
+     "from": "demo-5",
+     "to": "demo-0",
+     "cents": 650
+    },
+    {
+     "from": "demo-5",
+     "to": "demo-4",
+     "cents": 200
+    }
+   ]
+  },
+  {
+   "id": 1758310200000,
+   "date": 1758310200000,
+   "manual": false,
+   "buyInCents": 1000,
+   "chipsPerBuyIn": 1000,
+   "tableCents": 5000,
+   "results": [
+    {
+     "playerId": "demo-2",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 3290,
+     "netCents": 2290
+    },
+    {
+     "playerId": "demo-5",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 1670,
+     "netCents": 670
+    },
+    {
+     "playerId": "demo-3",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 0,
+     "netCents": -1000
+    },
+    {
+     "playerId": "demo-6",
+     "rebuys": 1,
+     "rebuyCents": 1000,
+     "investedCents": 2000,
+     "soldCents": 0,
+     "finalChips": 40,
+     "netCents": -1960
+    }
+   ],
+   "transfers": [
+    {
+     "from": "demo-6",
+     "to": "demo-2",
+     "cents": 1960
+    },
+    {
+     "from": "demo-3",
+     "to": "demo-5",
+     "cents": 670
+    },
+    {
+     "from": "demo-3",
+     "to": "demo-2",
+     "cents": 330
+    }
+   ]
+  },
+  {
+   "id": 1759433400000,
+   "date": 1759433400000,
+   "manual": false,
+   "buyInCents": 1000,
+   "chipsPerBuyIn": 1000,
+   "tableCents": 7000,
+   "results": [
+    {
+     "playerId": "demo-0",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 4530,
+     "netCents": 3530
+    },
+    {
+     "playerId": "demo-1",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 1400,
+     "netCents": 400
+    },
+    {
+     "playerId": "demo-4",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 60,
+     "netCents": -940
+    },
+    {
+     "playerId": "demo-6",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 20,
+     "netCents": -980
+    },
+    {
+     "playerId": "demo-3",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 10,
+     "netCents": -990
+    },
+    {
+     "playerId": "demo-2",
+     "rebuys": 1,
+     "rebuyCents": 1000,
+     "investedCents": 2000,
+     "soldCents": 0,
+     "finalChips": 980,
+     "netCents": -1020
+    }
+   ],
+   "transfers": [
+    {
+     "from": "demo-2",
+     "to": "demo-0",
+     "cents": 1020
+    },
+    {
+     "from": "demo-3",
+     "to": "demo-0",
+     "cents": 990
+    },
+    {
+     "from": "demo-6",
+     "to": "demo-0",
+     "cents": 980
+    },
+    {
+     "from": "demo-4",
+     "to": "demo-0",
+     "cents": 540
+    },
+    {
+     "from": "demo-4",
+     "to": "demo-1",
+     "cents": 400
+    }
+   ]
+  },
+  {
+   "id": 1760988600000,
+   "date": 1760988600000,
+   "manual": false,
+   "buyInCents": 1000,
+   "chipsPerBuyIn": 1000,
+   "tableCents": 7000,
+   "results": [
+    {
+     "playerId": "demo-2",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 2460,
+     "netCents": 1460
+    },
+    {
+     "playerId": "demo-0",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 1940,
+     "netCents": 940
+    },
+    {
+     "playerId": "demo-5",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 680,
+     "netCents": -320
+    },
+    {
+     "playerId": "demo-6",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 10,
+     "netCents": -990
+    },
+    {
+     "playerId": "demo-4",
+     "rebuys": 2,
+     "rebuyCents": 2000,
+     "investedCents": 3000,
+     "soldCents": 0,
+     "finalChips": 1910,
+     "netCents": -1090
+    }
+   ],
+   "transfers": [
+    {
+     "from": "demo-4",
+     "to": "demo-2",
+     "cents": 1090
+    },
+    {
+     "from": "demo-6",
+     "to": "demo-0",
+     "cents": 940
+    },
+    {
+     "from": "demo-5",
+     "to": "demo-2",
+     "cents": 320
+    },
+    {
+     "from": "demo-6",
+     "to": "demo-2",
+     "cents": 50
+    }
+   ]
+  },
+  {
+   "id": 1762201800000,
+   "date": 1762201800000,
+   "manual": false,
+   "buyInCents": 1000,
+   "chipsPerBuyIn": 1000,
+   "tableCents": 13000,
+   "results": [
+    {
+     "playerId": "demo-5",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 3550,
+     "netCents": 2550
+    },
+    {
+     "playerId": "demo-4",
+     "rebuys": 2,
+     "rebuyCents": 2000,
+     "investedCents": 3000,
+     "soldCents": 0,
+     "finalChips": 4280,
+     "netCents": 1280
+    },
+    {
+     "playerId": "demo-0",
+     "rebuys": 3,
+     "rebuyCents": 3000,
+     "investedCents": 4000,
+     "soldCents": 0,
+     "finalChips": 5150,
+     "netCents": 1150
+    },
+    {
+     "playerId": "demo-3",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 10,
+     "netCents": -990
+    },
+    {
+     "playerId": "demo-1",
+     "rebuys": 3,
+     "rebuyCents": 3000,
+     "investedCents": 4000,
+     "soldCents": 0,
+     "finalChips": 10,
+     "netCents": -3990
+    }
+   ],
+   "transfers": [
+    {
+     "from": "demo-1",
+     "to": "demo-5",
+     "cents": 2550
+    },
+    {
+     "from": "demo-1",
+     "to": "demo-4",
+     "cents": 1280
+    },
+    {
+     "from": "demo-3",
+     "to": "demo-0",
+     "cents": 990
+    },
+    {
+     "from": "demo-1",
+     "to": "demo-0",
+     "cents": 160
+    }
+   ]
+  },
+  {
+   "id": 1763411400000,
+   "date": 1763411400000,
+   "manual": false,
+   "buyInCents": 1000,
+   "chipsPerBuyIn": 1000,
+   "tableCents": 4000,
+   "results": [
+    {
+     "playerId": "demo-0",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 1000,
+     "finalChips": 2860,
+     "netCents": 2860
+    },
+    {
+     "playerId": "demo-1",
+     "rebuys": 1,
+     "rebuyCents": 1000,
+     "investedCents": 2000,
+     "soldCents": 0,
+     "finalChips": 1120,
+     "netCents": -880
+    },
+    {
+     "playerId": "demo-5",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 10,
+     "netCents": -990
+    },
+    {
+     "playerId": "demo-3",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 10,
+     "netCents": -990
+    }
+   ],
+   "transfers": [
+    {
+     "from": "demo-5",
+     "to": "demo-0",
+     "cents": 990
+    },
+    {
+     "from": "demo-3",
+     "to": "demo-0",
+     "cents": 990
+    },
+    {
+     "from": "demo-1",
+     "to": "demo-0",
+     "cents": 880
+    }
+   ]
+  },
+  {
+   "id": 1764621000000,
+   "date": 1764621000000,
+   "manual": false,
+   "buyInCents": 1000,
+   "chipsPerBuyIn": 1000,
+   "tableCents": 11000,
+   "results": [
+    {
+     "playerId": "demo-0",
+     "rebuys": 1,
+     "rebuyCents": 1000,
+     "investedCents": 2000,
+     "soldCents": 0,
+     "finalChips": 6610,
+     "netCents": 4610
+    },
+    {
+     "playerId": "demo-4",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 1810,
+     "netCents": 810
+    },
+    {
+     "playerId": "demo-2",
+     "rebuys": 1,
+     "rebuyCents": 1000,
+     "investedCents": 2000,
+     "soldCents": 0,
+     "finalChips": 2290,
+     "netCents": 290
+    },
+    {
+     "playerId": "demo-1",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 210,
+     "netCents": -790
+    },
+    {
+     "playerId": "demo-5",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 60,
+     "netCents": -940
+    },
+    {
+     "playerId": "demo-3",
+     "rebuys": 1,
+     "rebuyCents": 1000,
+     "investedCents": 2000,
+     "soldCents": 0,
+     "finalChips": 10,
+     "netCents": -1990
+    },
+    {
+     "playerId": "demo-6",
+     "rebuys": 1,
+     "rebuyCents": 1000,
+     "investedCents": 2000,
+     "soldCents": 0,
+     "finalChips": 10,
+     "netCents": -1990
+    }
+   ],
+   "transfers": [
+    {
+     "from": "demo-3",
+     "to": "demo-0",
+     "cents": 1990
+    },
+    {
+     "from": "demo-6",
+     "to": "demo-0",
+     "cents": 1990
+    },
+    {
+     "from": "demo-5",
+     "to": "demo-4",
+     "cents": 810
+    },
+    {
+     "from": "demo-1",
+     "to": "demo-0",
+     "cents": 630
+    },
+    {
+     "from": "demo-1",
+     "to": "demo-2",
+     "cents": 160
+    },
+    {
+     "from": "demo-5",
+     "to": "demo-2",
+     "cents": 130
+    }
+   ]
+  },
+  {
+   "id": 1765744200000,
+   "date": 1765744200000,
+   "manual": false,
+   "buyInCents": 1000,
+   "chipsPerBuyIn": 1000,
+   "tableCents": 12000,
+   "results": [
+    {
+     "playerId": "demo-2",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 4310,
+     "netCents": 3310
+    },
+    {
+     "playerId": "demo-0",
+     "rebuys": 1,
+     "rebuyCents": 1000,
+     "investedCents": 2000,
+     "soldCents": 0,
+     "finalChips": 4190,
+     "netCents": 2190
+    },
+    {
+     "playerId": "demo-5",
+     "rebuys": 1,
+     "rebuyCents": 1000,
+     "investedCents": 2000,
+     "soldCents": 0,
+     "finalChips": 1910,
+     "netCents": -90
+    },
+    {
+     "playerId": "demo-6",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 20,
+     "netCents": -980
+    },
+    {
+     "playerId": "demo-4",
+     "rebuys": 3,
+     "rebuyCents": 3000,
+     "investedCents": 4000,
+     "soldCents": 1000,
+     "finalChips": -110,
+     "netCents": -2110
+    },
+    {
+     "playerId": "demo-3",
+     "rebuys": 2,
+     "rebuyCents": 2000,
+     "investedCents": 3000,
+     "soldCents": 0,
+     "finalChips": 1680,
+     "netCents": -2320
+    }
+   ],
+   "transfers": [
+    {
+     "from": "demo-3",
+     "to": "demo-2",
+     "cents": 2320
+    },
+    {
+     "from": "demo-4",
+     "to": "demo-0",
+     "cents": 2110
+    },
+    {
+     "from": "demo-6",
+     "to": "demo-2",
+     "cents": 980
+    },
+    {
+     "from": "demo-5",
+     "to": "demo-0",
+     "cents": 80
+    },
+    {
+     "from": "demo-5",
+     "to": "demo-2",
+     "cents": 10
+    }
+   ]
+  },
+  {
+   "id": 1766781000000,
+   "date": 1766781000000,
+   "manual": false,
+   "buyInCents": 1000,
+   "chipsPerBuyIn": 1000,
+   "tableCents": 10000,
+   "results": [
+    {
+     "playerId": "demo-2",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 6650,
+     "netCents": 5650
+    },
+    {
+     "playerId": "demo-4",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 1250,
+     "netCents": 250
+    },
+    {
+     "playerId": "demo-0",
+     "rebuys": 1,
+     "rebuyCents": 1000,
+     "investedCents": 2000,
+     "soldCents": 0,
+     "finalChips": 1520,
+     "netCents": -480
+    },
+    {
+     "playerId": "demo-5",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 490,
+     "netCents": -510
+    },
+    {
+     "playerId": "demo-1",
+     "rebuys": 1,
+     "rebuyCents": 1000,
+     "investedCents": 2000,
+     "soldCents": 0,
+     "finalChips": 50,
+     "netCents": -1950
+    },
+    {
+     "playerId": "demo-3",
+     "rebuys": 2,
+     "rebuyCents": 2000,
+     "investedCents": 3000,
+     "soldCents": 0,
+     "finalChips": 40,
+     "netCents": -2960
+    }
+   ],
+   "transfers": [
+    {
+     "from": "demo-3",
+     "to": "demo-2",
+     "cents": 2960
+    },
+    {
+     "from": "demo-1",
+     "to": "demo-2",
+     "cents": 1950
+    },
+    {
+     "from": "demo-5",
+     "to": "demo-2",
+     "cents": 510
+    },
+    {
+     "from": "demo-0",
+     "to": "demo-4",
+     "cents": 250
+    },
+    {
+     "from": "demo-0",
+     "to": "demo-2",
+     "cents": 230
+    }
+   ]
+  },
+  {
+   "id": 1767904200000,
+   "date": 1767904200000,
+   "manual": false,
+   "buyInCents": 1000,
+   "chipsPerBuyIn": 1000,
+   "tableCents": 12000,
+   "results": [
+    {
+     "playerId": "demo-0",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 1000,
+     "finalChips": 3430,
+     "netCents": 3430
+    },
+    {
+     "playerId": "demo-2",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 4320,
+     "netCents": 3320
+    },
+    {
+     "playerId": "demo-5",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 2170,
+     "netCents": 1170
+    },
+    {
+     "playerId": "demo-3",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 350,
+     "netCents": -650
+    },
+    {
+     "playerId": "demo-6",
+     "rebuys": 1,
+     "rebuyCents": 1000,
+     "investedCents": 2000,
+     "soldCents": 0,
+     "finalChips": 640,
+     "netCents": -1360
+    },
+    {
+     "playerId": "demo-4",
+     "rebuys": 2,
+     "rebuyCents": 2000,
+     "investedCents": 3000,
+     "soldCents": 0,
+     "finalChips": 720,
+     "netCents": -2280
+    },
+    {
+     "playerId": "demo-1",
+     "rebuys": 3,
+     "rebuyCents": 3000,
+     "investedCents": 4000,
+     "soldCents": 0,
+     "finalChips": 370,
+     "netCents": -3630
+    }
+   ],
+   "transfers": [
+    {
+     "from": "demo-1",
+     "to": "demo-0",
+     "cents": 3430
+    },
+    {
+     "from": "demo-4",
+     "to": "demo-2",
+     "cents": 2280
+    },
+    {
+     "from": "demo-6",
+     "to": "demo-5",
+     "cents": 1170
+    },
+    {
+     "from": "demo-3",
+     "to": "demo-2",
+     "cents": 650
+    },
+    {
+     "from": "demo-1",
+     "to": "demo-2",
+     "cents": 200
+    },
+    {
+     "from": "demo-6",
+     "to": "demo-2",
+     "cents": 190
+    }
+   ]
+  },
+  {
+   "id": 1769459400000,
+   "date": 1769459400000,
+   "manual": false,
+   "buyInCents": 1000,
+   "chipsPerBuyIn": 1000,
+   "tableCents": 15000,
+   "results": [
+    {
+     "playerId": "demo-4",
+     "rebuys": 2,
+     "rebuyCents": 2000,
+     "investedCents": 3000,
+     "soldCents": 0,
+     "finalChips": 5020,
+     "netCents": 2020
+    },
+    {
+     "playerId": "demo-5",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 2510,
+     "netCents": 1510
+    },
+    {
+     "playerId": "demo-2",
+     "rebuys": 1,
+     "rebuyCents": 1000,
+     "investedCents": 2000,
+     "soldCents": 0,
+     "finalChips": 2760,
+     "netCents": 760
+    },
+    {
+     "playerId": "demo-0",
+     "rebuys": 1,
+     "rebuyCents": 1000,
+     "investedCents": 2000,
+     "soldCents": 0,
+     "finalChips": 2750,
+     "netCents": 750
+    },
+    {
+     "playerId": "demo-1",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 1720,
+     "netCents": 720
+    },
+    {
+     "playerId": "demo-6",
+     "rebuys": 1,
+     "rebuyCents": 1000,
+     "investedCents": 2000,
+     "soldCents": 0,
+     "finalChips": 230,
+     "netCents": -1770
+    },
+    {
+     "playerId": "demo-3",
+     "rebuys": 3,
+     "rebuyCents": 3000,
+     "investedCents": 4000,
+     "soldCents": 0,
+     "finalChips": 10,
+     "netCents": -3990
+    }
+   ],
+   "transfers": [
+    {
+     "from": "demo-3",
+     "to": "demo-4",
+     "cents": 2020
+    },
+    {
+     "from": "demo-3",
+     "to": "demo-5",
+     "cents": 1510
+    },
+    {
+     "from": "demo-6",
+     "to": "demo-2",
+     "cents": 760
+    },
+    {
+     "from": "demo-6",
+     "to": "demo-0",
+     "cents": 750
+    },
+    {
+     "from": "demo-3",
+     "to": "demo-1",
+     "cents": 460
+    },
+    {
+     "from": "demo-6",
+     "to": "demo-1",
+     "cents": 260
+    }
+   ]
+  },
+  {
+   "id": 1770582600000,
+   "date": 1770582600000,
+   "manual": false,
+   "buyInCents": 1000,
+   "chipsPerBuyIn": 1000,
+   "tableCents": 10000,
+   "results": [
+    {
+     "playerId": "demo-0",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 5080,
+     "netCents": 4080
+    },
+    {
+     "playerId": "demo-2",
+     "rebuys": 1,
+     "rebuyCents": 1000,
+     "investedCents": 2000,
+     "soldCents": 0,
+     "finalChips": 4010,
+     "netCents": 2010
+    },
+    {
+     "playerId": "demo-3",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 490,
+     "netCents": -510
+    },
+    {
+     "playerId": "demo-4",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 270,
+     "netCents": -730
+    },
+    {
+     "playerId": "demo-5",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 130,
+     "netCents": -870
+    },
+    {
+     "playerId": "demo-1",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 10,
+     "netCents": -990
+    },
+    {
+     "playerId": "demo-6",
+     "rebuys": 2,
+     "rebuyCents": 2000,
+     "investedCents": 3000,
+     "soldCents": 0,
+     "finalChips": 10,
+     "netCents": -2990
+    }
+   ],
+   "transfers": [
+    {
+     "from": "demo-6",
+     "to": "demo-0",
+     "cents": 2990
+    },
+    {
+     "from": "demo-1",
+     "to": "demo-2",
+     "cents": 990
+    },
+    {
+     "from": "demo-5",
+     "to": "demo-0",
+     "cents": 870
+    },
+    {
+     "from": "demo-4",
+     "to": "demo-2",
+     "cents": 730
+    },
+    {
+     "from": "demo-3",
+     "to": "demo-2",
+     "cents": 290
+    },
+    {
+     "from": "demo-3",
+     "to": "demo-0",
+     "cents": 220
+    }
+   ]
+  },
+  {
+   "id": 1771619400000,
+   "date": 1771619400000,
+   "manual": false,
+   "buyInCents": 1000,
+   "chipsPerBuyIn": 1000,
+   "tableCents": 14000,
+   "results": [
+    {
+     "playerId": "demo-2",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 4710,
+     "netCents": 3710
+    },
+    {
+     "playerId": "demo-0",
+     "rebuys": 2,
+     "rebuyCents": 2000,
+     "investedCents": 3000,
+     "soldCents": 0,
+     "finalChips": 3790,
+     "netCents": 790
+    },
+    {
+     "playerId": "demo-4",
+     "rebuys": 1,
+     "rebuyCents": 1000,
+     "investedCents": 2000,
+     "soldCents": 0,
+     "finalChips": 2240,
+     "netCents": 240
+    },
+    {
+     "playerId": "demo-5",
+     "rebuys": 2,
+     "rebuyCents": 2000,
+     "investedCents": 3000,
+     "soldCents": 0,
+     "finalChips": 3080,
+     "netCents": 80
+    },
+    {
+     "playerId": "demo-6",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 10,
+     "netCents": -990
+    },
+    {
+     "playerId": "demo-3",
+     "rebuys": 1,
+     "rebuyCents": 1000,
+     "investedCents": 2000,
+     "soldCents": 0,
+     "finalChips": 140,
+     "netCents": -1860
+    },
+    {
+     "playerId": "demo-1",
+     "rebuys": 1,
+     "rebuyCents": 1000,
+     "investedCents": 2000,
+     "soldCents": 0,
+     "finalChips": 30,
+     "netCents": -1970
+    }
+   ],
+   "transfers": [
+    {
+     "from": "demo-1",
+     "to": "demo-2",
+     "cents": 1970
+    },
+    {
+     "from": "demo-3",
+     "to": "demo-2",
+     "cents": 1740
+    },
+    {
+     "from": "demo-6",
+     "to": "demo-0",
+     "cents": 790
+    },
+    {
+     "from": "demo-6",
+     "to": "demo-4",
+     "cents": 200
+    },
+    {
+     "from": "demo-3",
+     "to": "demo-5",
+     "cents": 80
+    },
+    {
+     "from": "demo-3",
+     "to": "demo-4",
+     "cents": 40
+    }
+   ]
+  },
+  {
+   "id": 1772915400000,
+   "date": 1772915400000,
+   "manual": false,
+   "buyInCents": 1000,
+   "chipsPerBuyIn": 1000,
+   "tableCents": 11000,
+   "results": [
+    {
+     "playerId": "demo-0",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 6070,
+     "netCents": 5070
+    },
+    {
+     "playerId": "demo-5",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 1000,
+     "finalChips": 220,
+     "netCents": 220
+    },
+    {
+     "playerId": "demo-1",
+     "rebuys": 1,
+     "rebuyCents": 1000,
+     "investedCents": 2000,
+     "soldCents": 0,
+     "finalChips": 1760,
+     "netCents": -240
+    },
+    {
+     "playerId": "demo-4",
+     "rebuys": 1,
+     "rebuyCents": 1000,
+     "investedCents": 2000,
+     "soldCents": 0,
+     "finalChips": 1750,
+     "netCents": -250
+    },
+    {
+     "playerId": "demo-3",
+     "rebuys": 1,
+     "rebuyCents": 1000,
+     "investedCents": 2000,
+     "soldCents": 0,
+     "finalChips": 100,
+     "netCents": -1900
+    },
+    {
+     "playerId": "demo-2",
+     "rebuys": 3,
+     "rebuyCents": 3000,
+     "investedCents": 4000,
+     "soldCents": 0,
+     "finalChips": 1100,
+     "netCents": -2900
+    }
+   ],
+   "transfers": [
+    {
+     "from": "demo-2",
+     "to": "demo-0",
+     "cents": 2900
+    },
+    {
+     "from": "demo-3",
+     "to": "demo-0",
+     "cents": 1900
+    },
+    {
+     "from": "demo-4",
+     "to": "demo-0",
+     "cents": 250
+    },
+    {
+     "from": "demo-1",
+     "to": "demo-5",
+     "cents": 220
+    },
+    {
+     "from": "demo-1",
+     "to": "demo-0",
+     "cents": 20
+    }
+   ]
+  },
+  {
+   "id": 1774211400000,
+   "date": 1774211400000,
+   "manual": false,
+   "buyInCents": 1000,
+   "chipsPerBuyIn": 1000,
+   "tableCents": 9000,
+   "results": [
+    {
+     "playerId": "demo-0",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 3790,
+     "netCents": 2790
+    },
+    {
+     "playerId": "demo-2",
+     "rebuys": 1,
+     "rebuyCents": 1000,
+     "investedCents": 2000,
+     "soldCents": 0,
+     "finalChips": 2970,
+     "netCents": 970
+    },
+    {
+     "playerId": "demo-5",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 1050,
+     "netCents": 50
+    },
+    {
+     "playerId": "demo-4",
+     "rebuys": 1,
+     "rebuyCents": 1000,
+     "investedCents": 2000,
+     "soldCents": 0,
+     "finalChips": 1130,
+     "netCents": -870
+    },
+    {
+     "playerId": "demo-1",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 60,
+     "netCents": -940
+    },
+    {
+     "playerId": "demo-3",
+     "rebuys": 1,
+     "rebuyCents": 1000,
+     "investedCents": 2000,
+     "soldCents": 0,
+     "finalChips": 0,
+     "netCents": -2000
+    }
+   ],
+   "transfers": [
+    {
+     "from": "demo-3",
+     "to": "demo-0",
+     "cents": 2000
+    },
+    {
+     "from": "demo-1",
+     "to": "demo-2",
+     "cents": 940
+    },
+    {
+     "from": "demo-4",
+     "to": "demo-0",
+     "cents": 790
+    },
+    {
+     "from": "demo-4",
+     "to": "demo-5",
+     "cents": 50
+    },
+    {
+     "from": "demo-4",
+     "to": "demo-2",
+     "cents": 30
+    }
+   ]
+  },
+  {
+   "id": 1775244600000,
+   "date": 1775244600000,
+   "manual": false,
+   "buyInCents": 1000,
+   "chipsPerBuyIn": 1000,
+   "tableCents": 14000,
+   "results": [
+    {
+     "playerId": "demo-0",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 4190,
+     "netCents": 3190
+    },
+    {
+     "playerId": "demo-4",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 2960,
+     "netCents": 1960
+    },
+    {
+     "playerId": "demo-2",
+     "rebuys": 1,
+     "rebuyCents": 1000,
+     "investedCents": 2000,
+     "soldCents": 0,
+     "finalChips": 1680,
+     "netCents": -320
+    },
+    {
+     "playerId": "demo-5",
+     "rebuys": 2,
+     "rebuyCents": 2000,
+     "investedCents": 3000,
+     "soldCents": 0,
+     "finalChips": 2680,
+     "netCents": -320
+    },
+    {
+     "playerId": "demo-6",
+     "rebuys": 2,
+     "rebuyCents": 2000,
+     "investedCents": 3000,
+     "soldCents": 1000,
+     "finalChips": -220,
+     "netCents": -1220
+    },
+    {
+     "playerId": "demo-3",
+     "rebuys": 0,
+     "rebuyCents": 0,
+     "investedCents": 1000,
+     "soldCents": 0,
+     "finalChips": 750,
+     "netCents": -1250
+    },
+    {
+     "playerId": "demo-1",
+     "rebuys": 3,
+     "rebuyCents": 3000,
+     "investedCents": 4000,
+     "soldCents": 0,
+     "finalChips": 1960,
+     "netCents": -2040
+    }
+   ],
+   "transfers": [
+    {
+     "from": "demo-1",
+     "to": "demo-0",
+     "cents": 2040
+    },
+    {
+     "from": "demo-3",
+     "to": "demo-4",
+     "cents": 1250
+    },
+    {
+     "from": "demo-6",
+     "to": "demo-0",
+     "cents": 1150
+    },
+    {
+     "from": "demo-2",
+     "to": "demo-4",
+     "cents": 320
+    },
+    {
+     "from": "demo-5",
+     "to": "demo-4",
+     "cents": 320
+    },
+    {
+     "from": "demo-6",
+     "to": "demo-4",
+     "cents": 70
+    }
+   ]
+  }
+ ]
+}

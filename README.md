@@ -29,7 +29,30 @@ RebuyTracker records every movement as it happens and does the whole settlement 
 - **Chip count with validation** — flags when the counted chips don't match the chips in play, with an option to apply a proportional correction.
 - **Results** — net win/loss per player and the minimal list of transfers (`Ana → Luis · €12.50`), shareable to your group chat.
 - **Regular players & global leaderboard** — all-time net, games played, winning nights, average and best night per player. Past games played without the app can be added by result only.
+- **Public web leaderboard** — optional automatic publishing to a GitHub Pages site (see below).
 - **Persistence & history** — the game in progress survives app restarts; closed games are kept in a history. Old saved games are migrated automatically.
+
+## Public leaderboard (GitHub Pages)
+
+**Live site:** https://ando144.github.io/RebuyTracker/ · **Demo with sample data:** https://ando144.github.io/RebuyTracker/?demo
+
+A static site in [`docs/`](docs) shows the group's all-time stats:
+
+- **Ranking** with podium, per-player sparklines and season filter (all time, by year, last 30 days)
+- **Evolution chart** of each player's cumulative balance
+- **Awards** — The Shark, The ATM, Rebuy King, The Patron, The Supplier, Most Reliable, Hot Streak… and one-night records (best night, worst night, biggest Bizum, most expensive table)
+- **Player pages** — balance, % of winning nights, best/worst night, streaks, rebuys, who they pay and who pays them, full game history
+- **Game history** with results and transfers for every night
+
+How it works:
+
+```
+Android app ──(GitHub REST API, fine-grained token)──► branch `data` / games.json
+                                                              │
+GitHub Pages (main /docs) ◄── fetches at runtime ─────────────┘
+```
+
+The app publishes `games.json` to a separate `data` branch, so `main` stays clean and CI isn't triggered. The site is plain HTML/CSS/JS with no build step (Chart.js for charts); all stats are computed client-side in [`docs/stats.js`](docs/stats.js).
 
 ## How the settlement works
 
@@ -56,13 +79,15 @@ The logic lives in [`Settlement.kt`](app/src/main/java/dev/rebuytracker/logic/Se
 | Architecture | Single-activity, MVVM with `StateFlow` |
 | Persistence | `kotlinx.serialization` JSON in `SharedPreferences` |
 | Testing | JUnit 4 |
+| Networking | GitHub REST API via `HttpURLConnection` + coroutines |
+| Web | Static HTML/CSS/JS on GitHub Pages, Chart.js |
 | CI | GitHub Actions (unit tests + debug build) |
 
 ## Project structure
 
 ```
 app/src/main/java/dev/rebuytracker/
-├── data/          # Game model, rebuy split rules, local persistence
+├── data/          # Game model, rebuy split rules, local persistence, GitHub publisher
 ├── logic/         # Settlement (net balances, transfer minimisation) and leaderboard
 ├── ui/
 │   ├── screens/   # Home, Setup, Game, Count, Results, Leaderboard, Roster, Manual game
@@ -70,6 +95,8 @@ app/src/main/java/dev/rebuytracker/
 │   ├── theme/     # Colours and typography
 │   └── GameViewModel.kt
 └── util/          # Currency / chip formatting and parsing
+
+docs/              # Public leaderboard website (GitHub Pages)
 ```
 
 ## Signing
@@ -95,7 +122,6 @@ Open the folder in Android Studio, let Gradle sync, and run the `app` configurat
 ## Roadmap
 
 - [ ] Screenshots and a short demo GIF
-- [ ] Public web leaderboard synced from the app
 - [ ] Light theme
 - [ ] Export history to CSV
 - [ ] Support for cash buy-ins paid upfront to a banker

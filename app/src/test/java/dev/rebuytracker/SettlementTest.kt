@@ -6,6 +6,7 @@ import dev.rebuytracker.data.MovementType
 import dev.rebuytracker.data.Player
 import dev.rebuytracker.data.Profile
 import dev.rebuytracker.logic.Leaderboard
+import dev.rebuytracker.logic.PublicExport
 import dev.rebuytracker.logic.Settlement
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -132,5 +133,25 @@ class SettlementTest {
         val bea = board.first { it.name == "Bea" }
         assertEquals(-700L, bea.netCents)
         assertEquals(0L, board.sumOf { it.netCents })
+    }
+
+    @Test
+    fun publicExportGroupsPlayersAndKeepsZeroSum() {
+        val profiles = listOf(Profile("p-ana", "Ana"))
+        val g = base().rebuy(2, 1000).copy(
+            players = listOf(Player(1, "Ana", "p-ana"), Player(2, "Bea"), Player(3, "Carlos"), Player(4, "Dani")),
+            finalChips = mapOf(1 to 3000L, 2 to 0L, 3 to 1000L, 4 to 1000L),
+        )
+        val manual = Game.manual(now = 5, playedAt = 5, players = listOf(Player(1, "ana"), Player(2, "Bea")), nets = mapOf(1 to 250L, 2 to -250L))
+        val data = PublicExport.build(listOf(manual, g), profiles, now = 99)
+        assertEquals(listOf(0L, 5L), data.games.map { it.date })
+        assertTrue(data.games.all { game -> game.results.sumOf { it.netCents } == 0L })
+        val anaIds = data.games.flatMap { it.results }.filter { it.playerId == "p-ana" }
+        assertEquals(2, anaIds.size)
+        assertEquals("Ana", data.players.first { it.id == "p-ana" }.name)
+        val bea = data.games[0].results.first { it.playerId == "name:bea" }
+        assertEquals(1, bea.rebuys)
+        assertEquals(2000L, bea.investedCents)
+        assertNull(data.games[1].tableCents)
     }
 }
